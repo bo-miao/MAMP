@@ -1,0 +1,7 @@
+spatial-correlation-sampler
+future
+matplotlib
+opencv-python
+scikit-image
+setproctitle
+tensorboard
