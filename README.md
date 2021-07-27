@@ -3,7 +3,7 @@
 
 This repository contains the source code for our paper:
 
-[Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](Website)
+**Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation**
 
 
 ![Figure](figures/Fig2.png)
@@ -11,11 +11,11 @@ This repository contains the source code for our paper:
 
 ## Citation
 ```
-@misc{2021_mamp,
-  author =   {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
-  title =    {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
-  howpublished = {arXiv},
-  year = {2021}
+@misc{Miao2021MAMP,
+  author        =  {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
+  title         =  {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
+  howpublished  =  {arXiv},
+  year          =  {2021}
 }
 ```
 
