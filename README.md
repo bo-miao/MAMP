@@ -1,9 +1,12 @@
+[![arXiv](https://img.shields.io/badge/cs.CV-%09arXiv%3A2011.14660-red)](https://arxiv.org/abs/2107.12569)
+
+
 
 # Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation (MAMP)
 
-This repository contains the source code for our paper:
+This repository contains the source code (PyTorch) for our paper:
 
-**Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation**
+[Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](https://arxiv.org/abs/2002.07793)
 
 
 ![Figure](figures/Fig2.png)
