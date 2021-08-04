@@ -6,7 +6,7 @@
 
 This repository contains the source code (PyTorch) for our paper:
 
-[Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](https://arxiv.org/abs/2002.07793)
+[Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](https://arxiv.org/abs/2107.12569)
 
 
 ![Figure](figures/Fig2.png)
