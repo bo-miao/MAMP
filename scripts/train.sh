@@ -13,7 +13,7 @@ train_corr_radius=6
 bsize=24
 worker=${bsize}
 lr=1e-3
-epochs=35
+epochs=33
 proc_name='Train_MAMP'
 
 python -u train.py \
