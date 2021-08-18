@@ -80,7 +80,8 @@ def evaluate(dataloader, model, log, of_model):
     except:
         a = None
     os.makedirs(folder, exist_ok=True)
-
+    TotalModelTime = AverageMeter()
+    video_num = len(dataloader)
     log.info("Start testing, number of videos {}.".format(len(dataloader)))
     for video_index, (images, annotations, meta) in tqdm(enumerate(dataloader)):
         ModelTime = AverageMeter()
@@ -124,6 +125,9 @@ def evaluate(dataloader, model, log, of_model):
             if args.optical_flow_warp:
                 flow_img_mem = [video_frames[ind].cuda() for ind in ref_index]
                 flow_img_query = video_frames[i + 1].cuda()
+            
+            s_ = time.time()
+            if args.optical_flow_warp:
                 for img, ind in zip(flow_img_mem, ref_index):
                     long_gap = 5
                     iter_num = 5 if (i + 1) - ind > long_gap else 2
@@ -133,17 +137,17 @@ def evaluate(dataloader, model, log, of_model):
                     optical_flows.append(flow_up)
 
             with torch.no_grad():
-                s_ = time.time()
                 _output = model(img_mem, msk_mem, img_query, optical_flows)
                 _output = F.interpolate(_output, (padded_height, padded_width), mode='bilinear')
                 output = torch.argmax(_output, 1, keepdim=True).float()
-                ModelTime.update(time.time() - s_)
-
+                
                 if i + 1 in annotation_index:
                     extra_anno_idx = annotation_index.index(i + 1)
                     extra_anno = annotations[extra_anno_idx].cuda()
                     output = output * (extra_anno == 0) + extra_anno
-
+               
+            ModelTime.update(time.time() - s_)
+            TotalModelTime.update(time.time() - s_)
             outputs.append(output[:, :, ::2, ::2].cpu())
             output_folder = os.path.join(folder, video_name)
             os.makedirs(output_folder, exist_ok=True)
@@ -157,7 +161,10 @@ def evaluate(dataloader, model, log, of_model):
             save_mask(output_file, out_img)
 
             # torch.cuda.empty_cache()
-
+            
+        performance = '\t'.join(['Per FPS: ({:.1f}). Total FPS: ({:.1f})'.format(1 / ModelTime.avg, 1 / TotalModelTime.avg)])
+        log.info('[{}/{}] {}: {}'.format(video_index + 1, video_num, video_name, performance))
+        
     source_path = os.path.join(args.savepath, args.proc_name.split('.')[0], 'Annotations')
     zip_folder(source_path, source_path + '.zip')
     log.info("Compress {} into ZIP.".format(source_path))
