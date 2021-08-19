@@ -112,7 +112,7 @@ def evaluate(dataloader, model, log, of_model):
 
         images = [x[:, :, ::2, ::2] for x in images]
         outputs = [annotations[0][:, :, ::2, ::2].contiguous()]
-        video_frames = [x[:, :, ::2, ::2] for x in video_frames]
+        video_frames = [x[:, :, ::2, ::2] for x in video_frames] if args.optical_flow_warp else None
         N = len(images)
         for i in range(N - 1):
             ref_index = get_youtube_ref_index(i, 2, args.memory_length, annotation_index)
