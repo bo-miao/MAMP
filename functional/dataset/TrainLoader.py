@@ -36,7 +36,7 @@ def train_dataloader(csv_path="ytvos.csv", ref_num=1):
     num_frames = [int(filename.split(',')[2].strip()) for filename in filenames]
 
     all_index = np.arange(len(videos))
-    # np.random.shuffle(all_index)
+    np.random.shuffle(all_index)
 
     train_data = []
     total_num = ref_num + 1
