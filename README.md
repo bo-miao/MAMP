@@ -58,7 +58,7 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
 ## Test and evaluation
 - The pre-trained model can be downloaded at [Google drive](https://drive.google.com/drive/folders/1beeyiom8b0M6xUhu9-YHLinmI8jMcv46?usp=sharing). 
 - Use the following commands to test on DAVIS and YouTube-VOS, separately. The scripts are in ```scripts```.
-  The performance on DAVIS can be directly obtained from the outputs. The performance on YouTube-VOS need to be evaluated on the [specified server](https://competitions.codalab.org/competitions/19544). 
+  An approximate performance on DAVIS can be directly obtained from the output logs, or you can evaluate MAMP with the [official evaluation code](https://github.com/davisvideochallenge/davis2017-evaluation). The performance on YouTube-VOS need to be evaluated on the [specified server](https://competitions.codalab.org/competitions/19544). 
     ```
     sh test_davis.sh
     ```
