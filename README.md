@@ -47,6 +47,8 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
         ├── train
         ├── valid
         ├── all (train_all_frames)
+            ├── videos
+                ├── consecutive frames
 ```
 
 ## Train
