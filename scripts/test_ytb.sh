@@ -1,7 +1,7 @@
 cd ..
 gpus='0'
 export CUDA_VISIBLE_DEVICES=${gpus}
-echo "using gpus ${gpus}"
+echo "Using gpus ${gpus}"
 now=$(date +"%T")
 echo "Current time : $now"
 
