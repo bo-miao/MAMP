@@ -218,4 +218,10 @@ class Lambda(object):
         return self.__class__.__name__ + '()'
 
 
+class DivNorm(object):
+    def __init__(self, value):
+        self.value = value
 
+    def __call__(self, images):
+        images = [x/self.value for x in images]
+        return images

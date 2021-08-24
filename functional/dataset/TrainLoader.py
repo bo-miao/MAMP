@@ -62,7 +62,7 @@ def train_dataloader(csv_path="ytvos.csv", ref_num=1):
 
 def image_loader(path):
     image = cv2.imread(path)
-    image = np.float32(image) / 255.0
+    image = np.float32(image)  #/ 255.0
     return image
 
 
@@ -73,6 +73,7 @@ class train_image_folder(data.Dataset):
         self.root_path = root_path
         self.composed_transforms = transforms.Compose([
             tr.Resize(self.args.img_size),
+            tr.DivNorm(255.0),
             tr.ConvertToLAB(),
             tr.ToTensor(),
             tr.Normalize([50, 0, 0], [50, 127, 127])])
