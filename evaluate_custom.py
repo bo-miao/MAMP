@@ -74,7 +74,7 @@ def evaluate(dataloader, model, log, of_model):
     model.eval()
     torch.backends.cudnn.benchmark = True
 
-    folder = os.path.join(args.savepath, args.proc_name.split('.')[0], 'Custom')
+    folder = os.path.join(args.savepath, args.proc_name.split('.')[0], 'Demo')
     try:
         shutil.rmtree(folder)
     except:
@@ -111,7 +111,7 @@ def evaluate(dataloader, model, log, of_model):
 
         images = [x[:, :, ::2, ::2] for x in images]
         outputs = [annotations[0][:, :, ::2, ::2].contiguous()]
-        video_frames = [x[:, :, ::2, ::2] for x in video_frames]
+        video_frames = [x[:, :, ::2, ::2] for x in video_frames] if args.optical_flow_warp else None
         N = len(images)
         for i in range(N - 1):
             ref_index = get_youtube_ref_index(i, 2, args.memory_length, annotation_index)
@@ -158,9 +158,9 @@ def evaluate(dataloader, model, log, of_model):
 
             # torch.cuda.empty_cache()
 
-    source_path = os.path.join(args.savepath, args.proc_name.split('.')[0], 'Annotations')
-    zip_folder(source_path, source_path + '.zip')
-    log.info("Compress {} into ZIP.".format(source_path))
+    log.info("The segmentation results of ckpt/DEMO/valid_demo have been saved into {}".format(folder))
+    #zip_folder(source_path, source_path + '.zip')
+    #log.info("Compress {} into ZIP.".format(source_path))
 
     return None
 

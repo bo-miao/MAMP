@@ -158,6 +158,9 @@ def train(dataloader, model, optimizer, scaler, log, writer, epoch):
         'scaler': scaler.state_dict() if args.is_amp else None,
     }, savefilename)
 
+    torch.save({
+        'state_dict': model.module.state_dict(),
+    }, os.path.join(args.savepath, f'model.pt'))
 
 def adjust_lr(optimizer, epoch, batch_ind, batch_num):
     iteration = (batch_ind + epoch * batch_num) * args.bsize

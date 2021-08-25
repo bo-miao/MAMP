@@ -9,9 +9,6 @@ This repository contains the source code (PyTorch) for our paper:
 [Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](https://arxiv.org/abs/2107.12569)
 
 
-![Figure](figures/Fig2.png)
-
-
 ## Citation
 ```
 @misc{Miao2021MAMP,
@@ -24,7 +21,7 @@ This repository contains the source code (PyTorch) for our paper:
 
 
 ## Requirements
-The code has been trained and tested with PyTorch 1.9, Python 3.9, and Cuda 11.2.
+The code has been trained and tested with PyTorch 1.9 (1.9.0a0+gitc91c4a0), Python 3.9, and Cuda 11.2.
 
 Other dependencies could be installed by running:
 ```Shell
@@ -39,6 +36,10 @@ To evaluate/train MAMP, you will need to download the required datasets.
 You can create symbolic links to wherever the datasets were downloaded in the `datasets` folder
 ```Shell
 ├── datasets
+    ├── DEMO
+        ├── valid_demo
+            ├── Annotations
+            ├── JPEGImages       
     ├── DAVIS
         ├── JPEGImages
         ├── Annotations
@@ -46,21 +47,28 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
     ├── YOUTUBE
         ├── train
         ├── valid
-        ├── all (train_all_frames)
+        ├── all (the data is from train_all_frames)
             ├── videos
                 ├── consecutive frames
 ```
 
+## Demo
+- Use the following command in `scripts` folder to run a basic demo to visualize the segmentation results of MAMP.
+    ```
+    sh test_demo.sh
+    ```
+  
 ## Train
-- Use the following command to train
+- Use the following command in `scripts` folder to train.
     ```
     sh train.sh
     ```
 
 ## Test and evaluation
 - The pre-trained model can be downloaded at [Google drive](https://drive.google.com/drive/folders/1beeyiom8b0M6xUhu9-YHLinmI8jMcv46?usp=sharing). 
-- Use the following commands to test on DAVIS and YouTube-VOS, separately. The scripts are in ```scripts```.
-  An approximate performance on DAVIS can be directly obtained from the output logs, or you can evaluate MAMP with the [official evaluation code](https://github.com/davisvideochallenge/davis2017-evaluation). The performance on YouTube-VOS need to be evaluated on the [specified server](https://competitions.codalab.org/competitions/19544). 
+- Use the following commands in `scripts` folder to evaluate on DAVIS and YouTube-VOS, separately.
+  An approximate performance on DAVIS can be directly obtained from the output logs, or you can evaluate MAMP on DAVIS with the [official evaluation code](https://github.com/davisvideochallenge/davis2017-evaluation). 
+  The performance on YouTube-VOS need to be evaluated on the [official server](https://competitions.codalab.org/competitions/19544). 
     ```
     sh test_davis.sh
     ```
