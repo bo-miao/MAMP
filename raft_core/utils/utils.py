@@ -91,6 +91,14 @@ def upflow2(flow, mode='bilinear'):
     return 2 * F.interpolate(flow, size=new_size, mode=mode, align_corners=True)
 
 
+def upflow(flow, r=8, mode='bilinear'):
+    if r == 1:
+        return flow
+
+    new_size = (r * flow.shape[2], r * flow.shape[3])
+    return r * F.interpolate(flow, size=new_size, mode=mode, align_corners=True)
+
+
 def load_image(imfile):
     img = np.array(Image.open(imfile)).astype(np.uint8)
     img = torch.from_numpy(img).permute(2, 0, 1).float()

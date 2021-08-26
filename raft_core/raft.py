@@ -16,7 +16,7 @@ import torch.nn.functional as F
 from .update import BasicUpdateBlock, SmallUpdateBlock
 from .extractor import BasicEncoder, SmallEncoder
 from .corr import CorrBlock, AlternateCorrBlock
-from .utils.utils import bilinear_sampler, coords_grid, upflow8, upflow2
+from .utils.utils import bilinear_sampler, coords_grid, upflow8, upflow2, upflow
 
 try:
     autocast = torch.cuda.amp.autocast
@@ -141,18 +141,8 @@ class RAFT(nn.Module):
             # F(t+1) = F(t) + \Delta(t)
             coords1 = coords1 + delta_flow
 
-            # upsample predictions
-            if up_scale == 2:
-                flow_up = upflow2(coords1 - coords0)
-            else:
-                flow_up = upflow8(coords1 - coords0)
-            # if up_mask is None:
-            #     # print("1111")
-            #     # flow_up = upflow8(coords1 - coords0)
-            #     flow_up = upflow2(coords1 - coords0)
-            # else:
-            #     # print("222")
-            #     flow_up = self.upsample_flow(coords1 - coords0, up_mask)
+            flow_up = upflow(coords1 - coords0, up_scale)
+
             flow_predictions.append(flow_up)
 
         if test_mode:
