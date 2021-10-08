@@ -83,11 +83,11 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
 ## Results
 Comparison with other methods on DAVIS-2017  |
 :-------------------------:|
-![](figures/Fig1.png) |
+![](figures/Fig1.jpg) |
 
 Results on DAVIS-2017  |  Results on YouTube-VOS
 :-------------------------:|:-------------------------:
-![](figures/Fig3.png)  |  ![](figures/Fig4.png)
+![](figures/Fig3.jpg)  |  ![](figures/Fig4.jpg)
 
 ## Licenses
 This repo contains third party code.
