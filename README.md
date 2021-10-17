@@ -1,4 +1,3 @@
-### - Benchmark Results
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/self-supervised-video-object-segmentation-by-1/visual-object-tracking-on-davis-2017)](https://paperswithcode.com/sota/visual-object-tracking-on-davis-2017?p=self-supervised-video-object-segmentation-by-1)<br>
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/self-supervised-video-object-segmentation-by-1/video-object-segmentation-on-youtube-vos)](https://paperswithcode.com/sota/video-object-segmentation-on-youtube-vos?p=self-supervised-video-object-segmentation-by-1)
 
