@@ -1,26 +1,14 @@
+[![arXiv](https://img.shields.io/badge/cs.CV-%09arXiv%3A2011.14660-red)](https://arxiv.org/abs/2107.12569)
+
+**Compared with supervised-training results**
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/self-supervised-video-object-segmentation-by-1/visual-object-tracking-on-davis-2017)](https://paperswithcode.com/sota/visual-object-tracking-on-davis-2017?p=self-supervised-video-object-segmentation-by-1)<br>
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/self-supervised-video-object-segmentation-by-1/video-object-segmentation-on-youtube-vos)](https://paperswithcode.com/sota/video-object-segmentation-on-youtube-vos?p=self-supervised-video-object-segmentation-by-1)
 
-[![arXiv](https://img.shields.io/badge/cs.CV-%09arXiv%3A2011.14660-red)](https://arxiv.org/abs/2107.12569)
-
-
-# Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation (MAMP)
+## Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation (MAMP)
 
 This repository contains the source code (PyTorch) for our paper:
 
 [Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation](https://arxiv.org/abs/2107.12569)
-
-
-
-## Citation
-```
-@misc{Miao2021MAMP,
-  author        =  {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
-  title         =  {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
-  howpublished  =  {arXiv},
-  year          =  {2021}
-}
-```
 
 
 ## Requirements
@@ -78,6 +66,16 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
     ```
     sh test_ytb.sh
     ```
+    
+## Citation
+```
+@misc{Miao2021MAMP,
+  author        =  {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
+  title         =  {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
+  howpublished  =  {arXiv},
+  year          =  {2021}
+}
+```
 
 ## (Optional)
 - You can optionally use ```--is_amp``` to enable Automatic Mixed Precision in the evaluation of DAVIS and YouTube-VOS
