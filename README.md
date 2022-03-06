@@ -69,12 +69,14 @@ You can create symbolic links to wherever the datasets were downloaded in the `d
     ```
     
 ## Citation
+If you find the paper, code, or pre-trained models useful, please cite our papers:
 ```
-@misc{Miao2021MAMP,
-  author        =  {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
-  title         =  {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
-  howpublished  =  {arXiv},
-  year          =  {2021}
+@InProceedings{Miao2022mamp,
+  author        = {Bo Miao and Mohammed Bennamoun and Yongsheng Gao and Ajmal Mian},
+  title         = {Self-Supervised Video Object Segmentation by Motion-Aware Mask Propagation},
+  booktitle     = {IEEE International Conference on Multimedia and Expo (ICME)},
+  year          = {2022},
+  organization  = {IEEE}
 }
 ```
 
