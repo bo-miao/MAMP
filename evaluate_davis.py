@@ -91,86 +91,86 @@ def evaluate(dataloader, model, log, of_model):
         PFs = AverageMeter()
         PJs = AverageMeter()
         ModelTime = AverageMeter()
-
-        video_name = meta["video_name"][0]
-        annotation_index = [x.item() for x in meta["annotation_index"]]
-        frame_names = [x[0] for x in meta["frame_names"]]
-        height, width = meta['height'][0].item(), meta['width'][0].item()
-        padded_height, padded_width = height, width
-        abs_frame_path = [x[0] for x in meta["abs_frame_path"]]
-        video_frames = None
-        if args.optical_flow_warp:
-            video_frames = [load_image(x) for x in abs_frame_path]
-
-        if args.pad_divisible > 1:
-            divisible = args.pad_divisible
-            cur_b, cur_c, cur_h, cur_w = images[0].shape
-            pad_h = 0 if (cur_h % divisible) == 0 else divisible - (cur_h % divisible)
-            pad_w = 0 if (cur_w % divisible) == 0 else divisible - (cur_w % divisible)
-
-            if (pad_h + pad_w) != 0:
-                pad = nn.ZeroPad2d(padding=(0, pad_w, 0, pad_h))
-                images = [pad(x) for x in images]
-                annotations = [pad(x) for x in annotations]
-                video_frames = [pad(x) for x in video_frames] if args.optical_flow_warp else None
-                padded_height += pad_h
-                padded_width += pad_w
-
-        outputs = [annotations[0].contiguous()]
-        N = len(images)
-        for i in range(N - 1):
-            ref_index = get_davis_ref_index(i, 2, args.memory_length)
-            img_mem = [images[ind].cuda() for ind in ref_index]
-            msk_mem = [outputs[ind].cuda() for ind in ref_index]
-            img_query = images[i + 1].cuda()
-            msk_query = annotations[i + 1].cuda()
-
-            flow_img_mem, flow_img_query, optical_flows = [], [], []
+        with torch.cuda.amp.autocast(enabled=args.is_amp):
+            video_name = meta["video_name"][0]
+            annotation_index = [x.item() for x in meta["annotation_index"]]
+            frame_names = [x[0] for x in meta["frame_names"]]
+            height, width = meta['height'][0].item(), meta['width'][0].item()
+            padded_height, padded_width = height, width
+            abs_frame_path = [x[0] for x in meta["abs_frame_path"]]
+            video_frames = None
             if args.optical_flow_warp:
-                flow_img_mem = [video_frames[ind].cuda() for ind in ref_index]
-                flow_img_query = video_frames[i + 1].cuda()
-                for img, ind in zip(flow_img_mem, ref_index):
-                    long_gap = 15
-                    iter_num = 5 if (i + 1) - ind > long_gap else 2
-                    with torch.no_grad():
-                        _, flow_up = of_model(flow_img_query, img, iters=iter_num, test_mode=True, up_scale=2)
-                    flow_up = clamp_optical_flow(flow_up)
-                    optical_flows.append(flow_up)
+                video_frames = [load_image(x) for x in abs_frame_path]
 
-            with torch.no_grad():
-                s_ = time.time()
-                _output = model(img_mem, msk_mem, img_query, optical_flows)
-                _output = F.interpolate(_output, (padded_height, padded_width), mode='bilinear')
-                output = torch.argmax(_output, 1, keepdim=True).float()
-                ModelTime.update(time.time() - s_)
+            if args.pad_divisible > 1:
+                divisible = args.pad_divisible
+                cur_b, cur_c, cur_h, cur_w = images[0].shape
+                pad_h = 0 if (cur_h % divisible) == 0 else divisible - (cur_h % divisible)
+                pad_w = 0 if (cur_w % divisible) == 0 else divisible - (cur_w % divisible)
 
-            outputs.append(output.cpu())
-            max_class = msk_query.max()
-            js, fs = [], []
-            for classid in range(1, max_class + 1):
-                obj_true = (msk_query[:, :, :height, :width] == classid).cpu().numpy()[0, 0]  # unpadding is required
-                obj_pred = (output[:, :, :height, :width] == classid).cpu().numpy()[0, 0]
-                f = db_eval_boundary(obj_true, obj_pred)
-                j = db_eval_iou(obj_true, obj_pred)
-                fs.append(f)
-                js.append(j)
-                Fs.update(f)
-                Js.update(j)
-                PFs.update(f)
-                PJs.update(j)
+                if (pad_h + pad_w) != 0:
+                    pad = nn.ZeroPad2d(padding=(0, pad_w, 0, pad_h))
+                    images = [pad(x) for x in images]
+                    annotations = [pad(x) for x in annotations]
+                    video_frames = [pad(x) for x in video_frames] if args.optical_flow_warp else None
+                    padded_height += pad_h
+                    padded_width += pad_w
 
-            output_folder = os.path.join(folder, video_name)
-            os.makedirs(output_folder, exist_ok=True)
-            if i == 0:
-                output_file = os.path.join(output_folder, frame_names[0])
-                out_img = annotations[0][0, 0][:height, :width].cpu().numpy().astype(np.uint8)
+            outputs = [annotations[0].contiguous()]
+            N = len(images)
+            for i in range(N - 1):
+                ref_index = get_davis_ref_index(i, 2, args.memory_length)
+                img_mem = [images[ind].cuda() for ind in ref_index]
+                msk_mem = [outputs[ind].cuda() for ind in ref_index]
+                img_query = images[i + 1].cuda()
+                msk_query = annotations[i + 1].cuda()
+
+                flow_img_mem, flow_img_query, optical_flows = [], [], []
+                if args.optical_flow_warp:
+                    flow_img_mem = [video_frames[ind].cuda() for ind in ref_index]
+                    flow_img_query = video_frames[i + 1].cuda()
+                    for img, ind in zip(flow_img_mem, ref_index):
+                        long_gap = 15
+                        iter_num = 5 if (i + 1) - ind > long_gap else 2
+                        with torch.no_grad():
+                            _, flow_up = of_model(flow_img_query, img, iters=iter_num, test_mode=True, up_scale=2)
+                        flow_up = clamp_optical_flow(flow_up)
+                        optical_flows.append(flow_up)
+
+                with torch.no_grad():
+                    s_ = time.time()
+                    _output = model(img_mem, msk_mem, img_query, optical_flows)
+                    _output = F.interpolate(_output, (padded_height, padded_width), mode='bilinear')
+                    output = torch.argmax(_output, 1, keepdim=True).float()
+                    ModelTime.update(time.time() - s_)
+
+                outputs.append(output.cpu())
+                max_class = msk_query.max()
+                js, fs = [], []
+                for classid in range(1, max_class + 1):
+                    obj_true = (msk_query[:, :, :height, :width] == classid).cpu().numpy()[0, 0]  # unpadding is required
+                    obj_pred = (output[:, :, :height, :width] == classid).cpu().numpy()[0, 0]
+                    f = db_eval_boundary(obj_true, obj_pred)
+                    j = db_eval_iou(obj_true, obj_pred)
+                    fs.append(f)
+                    js.append(j)
+                    Fs.update(f)
+                    Js.update(j)
+                    PFs.update(f)
+                    PJs.update(j)
+
+                output_folder = os.path.join(folder, video_name)
+                os.makedirs(output_folder, exist_ok=True)
+                if i == 0:
+                    output_file = os.path.join(output_folder, frame_names[0])
+                    out_img = annotations[0][0, 0][:height, :width].cpu().numpy().astype(np.uint8)
+                    save_mask(output_file, out_img)
+
+                output_file = os.path.join(output_folder, frame_names[i + 1])
+                out_img = output[0, 0][:height, :width].cpu().numpy().astype(np.uint8)
                 save_mask(output_file, out_img)
 
-            output_file = os.path.join(output_folder, frame_names[i + 1])
-            out_img = output[0, 0][:height, :width].cpu().numpy().astype(np.uint8)
-            save_mask(output_file, out_img)
-
-            # torch.cuda.empty_cache()
+                # torch.cuda.empty_cache()
 
         # J&F accumulated performance; PJ&F performance on one video.
         performance = '\t'.join([
